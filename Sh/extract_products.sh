@@ -2,7 +2,8 @@
 # bash extract_products.sh
 # Enter the product numbers (comma-separated, e.g., 52,54): 141,142,144,145,146,147,149,233,310
 #
-#
+# sorted list in ascending order
+# echo "141,142,310,233,145,144,147,146,149" | tr ',' '\n' | sort -n | tr '\n' ',' | sed 's/,$//'
 # Input file containing the product list
 input_file="product_list.txt"
 
