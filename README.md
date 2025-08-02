@@ -12,6 +12,91 @@ Mesa Electronics is a U.S. manufacturer and designer of a wide range of electron
 
 
 
+---
+
+## 🔧 **Mesa Cards & LinuxCNC – Overview Notes**
+
+### ✅ **1. Purpose of Mesa Cards**
+
+Mesa cards are commonly used with **LinuxCNC** for **real-time motion control**. They offload time-critical tasks from the PC to an **FPGA chip**, improving performance and reliability.
+
+---
+
+### 🔌 **2. Common Mesa Models**
+
+| Model                | Interface     | Usage                                   |
+| -------------------- | ------------- | --------------------------------------- |
+| Mesa **7i76E**       | Ethernet      | Stepper motor control with I/O          |
+| Mesa **6i25** + 7i76 | PCI           | Stepper control (older PCI-based setup) |
+| Mesa **7i92**        | Ethernet      | Connects to daughter cards like 7i76    |
+| Mesa **7i90HD**      | PCIe          | FPGA-based, high-speed comms            |
+| Mesa **7i95T**       | PCIe          | Servo or stepper control                |
+| Mesa **7i93**        | PCIe/Ethernet | Compact, FPGA-based interface           |
+
+---
+
+### ⚙️ **3. Internal Technology**
+
+Mesa cards use **FPGA chips** (mostly Xilinx). The FPGA handles:
+
+* Real-time motion control
+* Step/dir signal generation
+* Encoder input reading
+* High-speed I/O timing
+
+---
+
+### 🖥️ **4. PC Communication & Drivers**
+
+* **No special driver needed** in Linux.
+* LinuxCNC includes the **HostMot2** driver (built-in).
+* Communication is managed via:
+
+  * PCI/PCIe (direct access)
+  * Ethernet (via UDP protocol)
+* All configuration is done using LinuxCNC HAL and INI files.
+
+---
+
+### 📂 **5. Bitfiles (FPGA Firmware)**
+
+* A **bitfile** (`.bit`, `.hm2`) defines the logic programmed into the FPGA.
+* It includes step generation, encoder logic, PWM, etc.
+
+#### 🔸 Loading the Bitfile:
+
+* Bitfiles are **flashed** into the Mesa card using `mesaflash`.
+* Once flashed, the FPGA auto-loads the bitfile at power-on.
+
+#### 🔸 Example Commands:
+
+```bash
+mesaflash --device 7i90 --write yourfile.bit
+mesaflash --device 7i90 --reload
+```
+
+---
+
+### 🛠️ **6. Source Code of Firmware**
+
+* Mesa firmware is written in **VHDL (.vhd files)**.
+* Some parts of the **HostMot2 firmware** are open-source.
+* You can modify `.vhd` files if you need custom functionality.
+
+#### 🔸 To build your own bitfile:
+
+1. Edit the `.vhd` source files.
+2. Use **Xilinx ISE** (for older FPGAs) or **Vivado** (for newer ones).
+3. Compile the project to generate a `.bit` file.
+4. Flash the new bitfile to the Mesa card using `mesaflash`.
+
+> ⚠️ Usually, you use **precompiled bitfiles** provided by Mesa or LinuxCNC. Rebuilding is only needed for custom setups.
+
+---
+
+
+
+
 
 # LinuxCNC Supported Boards
 
